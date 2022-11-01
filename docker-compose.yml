@@ -1,19 +1,16 @@
 version: "3.1"
-#services adı altında mongodb açtık..
+#services/mongodb 
 services:
   mongodb:
-#mongo'nun latest'ını alacak.
+    #mongo's get latest
     image: mongo:latest
-    #her zaman restart edilsin
+    #always get restart
     restart: always
-    #protu mapping olarak ayarladık, container'a içerden ve dışardan ulaşabilelim diye.
+    #Set to port mapping
     ports:
       - 27017:27017
-      #nerede tutulacağını söylüyor.
+      #storage > #data:/data/db
     volumes:
       - data:/data/db
-     #data:/data/db bunu tutmasını sağlıyor. 
 volumes:
   data: 
-
-
