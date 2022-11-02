@@ -1,10 +1,7 @@
-const dotenv = require('dotenv'); // .env dosyasını tanımladık.
+const dotenv = require('dotenv'); 
 
 
 
-
-
-module.exports = () => {  //tanımladıgımız şeyi fonksiyon olarak kullanabilmemiz için, fonksiyon olarak yazdık bunu
+module.exports = () => {  
     dotenv.config();
 };
-
