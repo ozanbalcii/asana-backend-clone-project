@@ -1,9 +1,7 @@
-//MODELS DOSYASINDA VERİ TABANINDAKİ OBJELERİN TANIMLARI BULUNACAKTIR.
 const Mongoose = require('mongoose');
 
 
-//mongoose modelini olusturmamız için Schema Modellerimizi olusturuyoruz:
-const ProjectSchema = new Mongoose.Schema( // mongoose'a schema oluşturttuk.
+const ProjectSchema = new Mongoose.Schema( 
 {
     name: String,
     // user_id : {
@@ -11,16 +9,8 @@ const ProjectSchema = new Mongoose.Schema( // mongoose'a schema oluşturttuk.
     //     ref : "user"
     // }
     },
-    {timestamps: true, versionKey: false} //mongoda görmek istediğimiz ve istemediğimiz şeyleri ayarladık.
+    {timestamps: true, versionKey: false}
 );
 
 
-
 module.exports = Mongoose.model("project", ProjectSchema);
-
-
-
-
-
-
-
