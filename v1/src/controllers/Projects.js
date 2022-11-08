@@ -1,4 +1,4 @@
-//logical işlemler(matıksal) burada gerçekleşiyor
+//logical işlemler(matıksal) controllers'da gerçekleşiyor
 
 const {insert, list} = require ("../services/Projects");
 const httpStatus = require("http-status");
