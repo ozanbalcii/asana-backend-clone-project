@@ -1,20 +1,31 @@
+
+const validate= require('../middlewares/validate');     //validate middleware
+const schemas = require("../validations/Users");       // validations
 const express = require('express');
+const { create, index, login } =  require("../controllers/Users"); 
+
+const router = express.Router(); 
 
 
 
+ 
+ router.get("/", index); 
+ router.route("/").post(validate(schemas.createValidation), create);  
+ router.route("/login").post(validate(schemas.loginValidation), login);  
 
-const router = express.Router(); // express'in router'ını kullanıyoruz.
 
-
-
-
-// router.get("/", index); 
-
-router.get("/", (req, res) => {
-    res.status(200).send("Working..");
-});
 
 
 
 module.exports = router; 
+
+
+
+ 
+
+
+
+
+
+
 
