@@ -12,7 +12,8 @@ const insert = (data) => {
                              // hataları, insert nerde(controllers>project.js) çalışıtırıyorsam creat içinde kontrol edeceğim
                              // hatta catch ile yakalıyoruz hataları
 
-const list = () => {
+
+const list = () => {  //* list'e sonucları attık.
     return Project.find({});  // boş find({}) yaparsak sonucları donuduruyor, yazarsak buluyor onu ve onu dönüdürüyor.
 }
 
