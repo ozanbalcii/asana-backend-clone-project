@@ -1,31 +1,41 @@
 const {insert, list, loginUser} = require ("../services/Users");
 const httpStatus = require("http-status");
-const { passwordToHash } = require ("../scripts/utils/helper");
+const { passwordToHash, generateAccessToken,  generateRefreshToken } = require ("../scripts/utils/helper");
 
-const create = (req, res) => {
-    req.body.password = passwordToHash(req.body.password); // hashlama yapıldı.
-    
-    insert(req.body)        //*req.body'den name alcaz yani: postmanden(front end) name vercez.(insert öylesine verilmiş bir isimdir.)
-    .then((response) =>{     // dogruysa then ile response(cevap) döndü.
+
+const create = (req, res) => { //* create fonksiyonu, insert sayesinde yeni kullanıcı olusturmaktadır.
+    req.body.password = passwordToHash(req.body.password); 
+    insert(req.body)        
+    .then((response) =>{     
         res
-        .status(httpStatus.CREATED)     //http status npm paketine ait özellik : httpStatus.CREATED BİZİM İÇİN EĞER DÜZGÜN ÇALIŞTIYSA BURADA STATUS : 200
+        .status(httpStatus.CREATED)     
         .send(response);
     })
-    .catch((e) => { // ynls ise catch'le yakala
+    .catch((e) => { 
         res
-        .status(httpStatus.INTERNAL_SERVER_ERROR) // HATA VARSA KENDİSİ ERROR STATUS SAYISINI DÖNDÜRÜYOR PAKET SAYESİNDE
+        .status(httpStatus.INTERNAL_SERVER_ERROR) 
         .send(e);
     });
 };
 
 //login process:
 const login =(req,res) => {
-    req.body.password = passwordToHash(req.body.password);
+    req.body.password = passwordToHash(req.body.password); // loginde de password old için hashledik.
     loginUser(req.body)
-    .then((user)=> { // user'ı bana döndüğü için user dedik.
+    .then((user)=> { // user'ı bana döndüğü için user dedik. (response da diyebiliriz ama user demek daha dogrudur.)
         // burada if sorgusu ile  login olurken email ve password sorgusu yapılıyor.
-        // return koymazsak iki kere geriye döndürür ve if'ten sonra çalışmaya devam eder
-        if(!user) return res.status(httpStatus.NOT_FOUND).send({message: "Böyle bir kullanıcı yoktur."})       
+        //* return koymazsak if'in altındaki satıra devam eder ve iki kere geriye döner
+        if(!user) return res.status(httpStatus.NOT_FOUND).send({message: "Böyle bir kullanıcı yoktur."}) 
+
+        //eğer user varsa buraya geliyor. 
+        user = {  // user'ın mantığı şu: (models/user' da olusturdugumuz user collection'u kullanıyoruz.)
+            ...user.toObject(), //user içindeki her şeyi buraya aktar. ve .toObject( ) objeye çevirdik.
+            tokens : { // tokens olarak obje olusturduk.
+                access_token : generateAccessToken(user), 
+                refresh_token : generateRefreshToken(user),
+            },
+        };
+        delete user.password;   
         res.status(httpStatus.OK).send(user);
     })
     .catch((e) => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(e));
