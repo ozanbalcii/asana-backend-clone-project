@@ -5,12 +5,11 @@
 const httpStatus = require("http-status");
 const validate = (schema) => (req, res, next) => { //*burada kurulan yapı, middleware'in genel sabit yapısıdır.
 
-     //https://joi.dev/api/   buradan bakarak yazdım:
+     // https://joi.dev/api/?v=17.6.1   buradan bakarak yazdım:
      //burada validate'ten true cıkarsa value, çıkamaz ise false old için.
     const { value, error }= schema.validate(req.body); // req.body'de data var ondan buraya yazdım
     if(error){
-        // error.details =[{message:""}, {message:""}]
-        // alttaki kod sayesinde, yukardakinden buna dönüşüyor: ["","",""] ve "aaa,bbb,ccc" haline geldi en son join sayesinde.
+        // alttaki kod sayesinde, error.details =[{message:""}, {message:""}] buna dönüşüyor: ["","",""] ve "aaa,bbb,ccc" haline geldi en son join sayesinde.
         const errorMessage = error.details?.map(detail => detail.message).join(", ") //* sadece error mesajlarını bana array içinde dön yaptık burda.
         res
         .status(httpStatus.BAD_REQUEST)
@@ -27,5 +26,3 @@ const validate = (schema) => (req, res, next) => { //*burada kurulan yapı, midd
 
 
 module.exports = validate;
-
-
