@@ -1,4 +1,5 @@
 //MODELS DOSYASINDA VERİ TABANINDAKİ OBJELERİN TANIMLARI BULUNACAKTIR.
+
 const Mongoose = require('mongoose');
 const logger = require("../scripts/logger/Projects"); // log basma işlemini burda yapcaz, ondan ekledik.
 
@@ -15,8 +16,11 @@ const ProjectSchema = new Mongoose.Schema( // mongoose'a schema oluşturttuk.
     {timestamps: true, versionKey: false} //mongoda görmek istediğimiz ve istemediğimiz şeyleri ayarladık.
 );
 
+
+
 //* schema burda oldugu için hook'u burada yazdık. ve bu dokumana gore yazdık: https://mongoosejs.com/docs/middleware.html#defining
-ProjectSchema.post("save" ,(doc)=>{      //kayıt sonrasında hook yardımı ile loglama yapıldı.
+// hook yardımı ile loglama yapacağız.
+ProjectSchema.post("save" ,(doc)=>{      //"save" işlemi sonrasında loglama yapacağız.
     logger.log({   // winston ile logger'ı bastırıyoruz.(logs diye dosya oluşturttuk winstona orada bastırdık.)
         level :"info",
         message : doc,
