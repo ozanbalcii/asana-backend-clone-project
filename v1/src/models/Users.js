@@ -18,8 +18,3 @@ const UserSchema = new Mongoose.Schema({
 
 //Mongoose'dan model üret, collection'ını user olcak ve bunu UserSchema'dan  gelecek bu.
 module.exports = Mongoose.model("user", UserSchema);
-
-
-
-
-
