@@ -1,4 +1,5 @@
 const {insert, list, loginUser} = require ("../services/Users");
+const projectService = require("../services/Projects");
 const httpStatus = require("http-status");
 const { passwordToHash, generateAccessToken,  generateRefreshToken } = require ("../scripts/utils/helper");
 
@@ -46,7 +47,6 @@ const login =(req,res) => {
 // index'in amacı: bütün projenin response'unu alabilmemize yarıyor.
 // altta da yorumda yazdım response'ye sonucları attık, response sayesinde sonucları döndürebiliyoruz index'te
 const index = (req, res) => { // get requestliyoruz ve bize kaydedilen userları veriyor.
-
     list()  //servise'de kayıt ediyorduk ve altta list olusturduk. burada sonuçları find ile döndürdük. burada response alıyorduk, response=cevap oldugu için ise repsonse'de sonuçlar döndü.
         .then(( response ) => {
         res
@@ -59,8 +59,23 @@ const index = (req, res) => { // get requestliyoruz ve bize kaydedilen userları
     };
   
 
+
+    // user'a ait projelerin listesini görmek için:
+    // services/project'daki list fonk'da where kullanıp obje varsa al yaparsak burada da kullanabiliriz list'i.
+const projectList = (req, res) => {
+    req.user?._id;
+    projectService.list({ user_id:req.user?._id }).then(project => {
+        res.status(httpStatus.OK).send(project);
+    })
+    .catch (e => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+       error: "The project cannot fetch." 
+    }))
+
+}   
+
 module.exports = {
-    create,
     index,
-    login
+    create,
+    login,
+    projectList,
 };
