@@ -4,7 +4,7 @@ const authenticate = require('../middlewares/authenticate');
 // //*validate'in içinde schema olması lazım, onun için schmeas olusturuldu. ALTTA DA VALİDATE'E SCHEMA'YI EKLİYORUZ.
 const schemas = require("../validations/Projects");
 const express = require('express');
-const { create, index } =  require("../controllers/Projects"); 
+const { create, index, update } =  require("../controllers/Projects"); 
 const router = express.Router(); // express'in router'ını kullanıyoruz.
 
 
@@ -19,7 +19,7 @@ const router = express.Router(); // express'in router'ını kullanıyoruz.
 //çünkü orada string olması, min:5 harf olması gibi koşullar var, onları validate ederse çalışacak.
  .post(authenticate, validate(schemas.createValidation), create);  // "/" gelince create'den once validate çalışacak.
 
-
+ router.route("/:id").patch(authenticate, validate(schemas.updateValidation), update);
 
 
 
