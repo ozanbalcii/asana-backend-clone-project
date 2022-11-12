@@ -2,7 +2,7 @@
 const validate= require('../middlewares/validate');     //validate middleware
 const schemas = require("../validations/Users");       // validations
 const express = require('express');
-const { create, index, login } =  require("../controllers/Users"); 
+const { create, index, login, projectList } =  require("../controllers/Users"); 
 
 const router = express.Router(); 
 
@@ -12,6 +12,7 @@ const router = express.Router();
  router.get("/", index); 
  router.route("/").post(validate(schemas.createValidation), create);  
  router.route("/login").post(validate(schemas.loginValidation), login);  
+ router.route("/projects").get(projectList);  
 
 
 
