@@ -1,6 +1,7 @@
 //* router'da geliyo validate'de bak eğer geçiyorsa devam geçmiyorsa error ver.
 // middleware'ler router seviyesindeler, bundan dolayı middleware'leri router dosyasında kullnacaz
 // validate'den geçermiyorsa durdurması lazım, bunun içinde araya girmeli, bundan dolayı middleware kullandık.
+// BODY'E gelen bilgiyi kontrol etmektedir. bu daha sonra kontrol ettiği yerler artacak. body kontrolünü joi ile yapıyoruz.
 
 const httpStatus = require("http-status");
 const validate = (schema) => (req, res, next) => { //*burada kurulan yapı, middleware'in genel sabit yapısıdır.
@@ -10,7 +11,7 @@ const validate = (schema) => (req, res, next) => { //*burada kurulan yapı, midd
     const { value, error }= schema.validate(req.body); // req.body'de data var ondan buraya yazdım
     if(error){
         // alttaki kod sayesinde, error.details =[{message:""}, {message:""}] buna dönüşüyor: ["","",""] ve "aaa,bbb,ccc" haline geldi en son join sayesinde.
-        const errorMessage = error.details?.map(detail => detail.message).join(", ") //* sadece error mesajlarını bana array içinde dön yaptık burda.
+        const errorMessage = error.details?.map((detail) => detail.message).join(", ") //* sadece error mesajlarını bana array içinde dön yaptık burda.
         res
         .status(httpStatus.BAD_REQUEST)
         .json({
