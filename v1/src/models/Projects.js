@@ -8,12 +8,12 @@ const logger = require("../scripts/logger/Projects"); // log basma işlemini bur
 const ProjectSchema = new Mongoose.Schema( // mongoose'a schema oluşturttuk.
 {
     name: String,
-    // user_id : {
-    //     type: Mongoose.Types.ObjectId,
-    //     ref : "user"
-    // }
+    user_id : {
+        type: Mongoose.Types.ObjectId,
+        ref : "user",
     },
-    {timestamps: true, versionKey: false} //mongoda görmek istediğimiz ve istemediğimiz şeyleri ayarladık.
+    },
+    { timestamps: true, versionKey: false } //mongoda görmek istediğimiz ve istemediğimiz şeyleri ayarladık.
 );
 
 
