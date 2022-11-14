@@ -7,7 +7,11 @@ const Joi = require ("joi"); //validation(doğrulama) için joi package'ını ku
 // name'in özelliklerini girdik, örneğin string, required ve min:5 olması gibi
 // bunlar validation'u sağlatan şeylerdir. Yani bu koşullar sağlanarak doğrulama yapılıyor.
 const createValidation = Joi.object({ //joi.object : joi'de obje üret
-    full_name: Joi.string().required().min(3),
+    name: Joi.string().required().min(5),
+});
+
+const updateValidation = Joi.object({ 
+    name: Joi.string().required().min(5),
 });
 
 //* validation yaparken, bir işlem geldiğinde araya girip doğrulama yapması ve validate sağlanıyorsa devam sağlanmıyosa iptal etmesi gerekmekte.
@@ -18,4 +22,5 @@ const createValidation = Joi.object({ //joi.object : joi'de obje üret
 
 module.exports = {  // objede exports'ladık çünkü 1 den fazla validation yapılacak.
     createValidation,
+    updateValidation,
 };
