@@ -19,7 +19,7 @@ if(token == null){ // token yoksa, gönderilmez ise..
 JWT.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY, (err, user) => { 
  if(err) return res.status(httpStatus.FORBIDDEN).send({ error: err}); // token süresi geçerse if'e takılır.
     // token süresi geçmemişse requeste user'ı ekleriz. request üstünden gerçekleştiği yaptık ve user eklememizin sebebi user'la ilgili bişey yapabilelim diyedir.
- req.user = user?._doc; //*user'In içindeki docu'u user olarak yaz, yani req.body'de sadece user bilgileri olacak
+ req.user = user?._doc; //*user'In içindeki doc'u user olarak yaz, yani req.body'de sadece user bilgileri olacak
  next();
 });
 };
