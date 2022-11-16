@@ -1,3 +1,4 @@
+//TÜM VALİDATİON İŞLEMLERİNİN BEYNİNİ BURDA OLUSTURDUK, HANGİ ŞEYLERİ KONTROL EDECEĞİNE VALİDATİON DOSYASI ALTINDA BAKIYORUZ, BURDA DA BEYNİ ÇAŞIŞYOR BAKILACAK ŞEYLERE GÖRE
 //* router'da geliyo validate'de bak eğer geçiyorsa devam geçmiyorsa error ver.
 // middleware'ler router seviyesindeler, bundan dolayı middleware'leri router dosyasında kullnacaz
 // validate'den geçermiyorsa durdurması lazım, bunun içinde araya girmeli, bundan dolayı middleware kullandık.
@@ -21,7 +22,7 @@ const validate = (schema) => (req, res, next) => { //*burada kurulan yapı, midd
     }
     //returnleri koyunca sorun olmuyor ya da  araya else diyip de yapabilirdik
     Object.assign(req, value); //*validate'den çıkan veri ile requestimi bind(bağlamak) edeceğiz.
-    return next();
+    return next();  //* validate'i sağlıyorsa if'e girmeyip buraya gelio ve next ile middleware'ı geçerek program çalışmaya başlıyor.
 
 }; 
 
