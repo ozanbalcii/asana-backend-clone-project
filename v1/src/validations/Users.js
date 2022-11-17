@@ -13,6 +13,10 @@ const loginValidation = Joi.object({
     email: Joi.string().email().required().min(8),
 });
 
+const resetPasswordValidation = Joi.object({   
+    email: Joi.string().email().required().min(8),
+});
+
 
 //* validation yaparken, bir işlem geldiğinde araya girip doğrulama yapması gerekmektedir.
 // bunun için middileware kullancağız.
@@ -20,4 +24,5 @@ const loginValidation = Joi.object({
 module.exports = {  // objede exports'ladık çünkü 1 den fazla validation yapılacak.
     createValidation,
     loginValidation,
+    resetPasswordValidation,
 }
