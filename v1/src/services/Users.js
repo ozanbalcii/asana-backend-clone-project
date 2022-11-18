@@ -18,8 +18,9 @@ const list = () => { // listeye datadaki bilgileri atcaz (find ile bulcaz ve atc
     return User.find({});  
 };
 
-// şifre değiştirmek için, burda yapılmasının sebebi:1. olarak update ediyo yani DB'ye kaydedio, DB'ye kaydetme işlemi burda oluyordu.  2.  neden ise: kayıt burada oluyor, email bilgisinden kullanıcıyı bulup şifre değişcez, mail bilgiside services'da çünkü db ye burda kaydediliyor.
+// şifre değiştirmek için, burda yapılmasının sebebi:1. olarak update ediyo yani DB'ye kaydedio, DB'ye kaydetme işlemi burda oluyordu.  2. neden ise: kayıt burada oluyor, email bilgisinden kullanıcıyı bulup şifre değişcez, mail bilgiside services'da çünkü db ye burda kaydediliyor.
 const modify = (where, data) => { // objeleri başka fonklarda almak için where. örnk: constrollers/user'da resetPassword'de
+    console.log(data);
     // findOneAndUpdate'e mongoose'dan bakılarak kullanıldı.(findOneAndUpdate: bir tane bulup güncelle, yan, şifre değiştir gibi bişi old için kullanılıyo.)
     return User.findOneAndUpdate(where, data, {new: true}); // where, data, {new: true} --> objeyi aldık ve yeni obje olusturup döndürdük.
 };
