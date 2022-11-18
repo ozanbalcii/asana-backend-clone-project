@@ -3,7 +3,6 @@ const projectService = require("../services/Projects");
 const httpStatus = require("http-status");
 const { passwordToHash, generateAccessToken,  generateRefreshToken } = require ("../scripts/utils/helper");
 const uuid = require("uuid");
-const eventEmitter = require("../scripts/events/eventEmitter");
 const { http } = require("winston");
 
 const create = (req, res) => { //* create fonksiyonu, insert sayesinde yeni kullanıcı olusturmaktadır.
@@ -68,7 +67,7 @@ const index = (req, res) => { // get requestliyoruz ve bize kaydedilen userları
     // bunları yapmamız içinde  projectService getirdiğimiz yerdeki list'e where yazarak obje varsa alacağız. (list'in konumu /services/project'de cunku: userin projelerini alıyoruz. user listeleseydik, /services/user'dak, listi kullanırdık.     )
 const projectList = (req, res) => {
     projectService 
-    .list({ user_id : req.user?._id })  // req.user?._id; req.user? -> requestteki user'ın içinden _id aldık.
+    .list({ user_id : req.user?._id })  // req.user?._id; req.user? -> requestteki user'ın içinden _id aldık. (models/project -> bırdan user_id aldık)
     .then(project => { 
         res.status(httpStatus.OK).send(project);
     })
@@ -89,21 +88,31 @@ const resetPassword = (req, res) => {
     modify({  email : req.body.email  }, {  password: passwordToHash(new_password)  })  //{email : req.body.email}-> services'dan aldıgımız user informations'dan email bilgisini çektik. {password: passwordToHash(new_password) ->  yeni olusturulan şifreyşi hashleyip eskisinin yerine kaydettik
     .then((updatedUser) => {
         if(!updatedUser) return res.status(httpStatus.NOT_FOUND).send({ error: "User not found, please try again."}); // updatedUser sorunluysa..
-
-        eventEmitter.emit("send_mail", "data emitter", {
-            to: updatedUser.email, // list of receivers
-            subject: "Şifre Sıfırlama", // Subject line
-            html: `Talebiniz üzerine şifre sıfırlama tamamlandı <br /> giriş yaptıktan sonra şifre değiştir <br /> Yeni Şifreniz: <b>${new_password}</b>`, // html body
-        });
-        res.status(httpStatus.OK).send({
-            message:"şifre sıfırlama için bilgiler email olarak yollandı"
-        })
-
-        
-
+    
+        res.status(httpStatus.CREATED) .send({message:"Password changed successfully!"});    
     })
-    .catch (() => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({error: "Your password cannot be reset. Please, can you try again?"}))
+    .catch (() => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({error: "1Your password cannot be reset. Please, can you try again?"}))
+    
 };
+
+
+const update = (req, res) => {
+
+if(!req.user){  // bu adımı yapmasakta olur, yani kullaınıcı giriş kontrolü, çünkü authenticate yapınca buna gerek kalmaz
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+        error: "  firstly one, login to Asana Clone for this process "
+    });
+};
+modify({ _id: req.user?._id}, req.body)
+.then(updatedUser => { // modify yazıp üstüne gelince içinde ne olması gerektiğini gösteriyor: where, data diyo. (where'de obje vardı.
+res.status(httpStatus.OK).send(updatedUser)
+})
+.catch(()=> res.status( httpStatus.INTERNAL_SERVER_ERROR).send({error: "Error, Cannot update information"}));
+};
+
+
+
+
 
 
 
@@ -117,4 +126,5 @@ module.exports = {
     login,
     projectList,
     resetPassword,
+    update,
 };
