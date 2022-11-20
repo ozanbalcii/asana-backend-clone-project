@@ -1,5 +1,6 @@
 //*mvp yapısına böldük(config, loaders.. vs gibi ama her şey bu dosya üstünden ilerlemektedir.)
 const express = require('express');
+const fileUpload = require('express-fileupload');
 const helmet = require('helmet');
 const config = require("./config");
 const loaders = require('./loaders');
@@ -18,16 +19,15 @@ events();
 // console.log( uuid.v4());
 
 
-const app = express();
-//buradak app. diyerek express ve helmet'i kullanıyoruz.
-app.use(express.json()); //body'deki bilgileri bize vermeye yarıyor
-app.use(helmet());
 
+const app = express(); //? express'i app değişkeninde kullanmak için.
+app.use(express.json()); //? body'deki bilgileri bize vermeye yarıyor
+app.use(helmet()); //? helmet'i kullanıyoruz.
+app.use(fileUpload());
 
-
-// application ile suncuyu bind(bağlıyoruz) ediyoruz.
+//! application ile suncuyu bind(bağlıyoruz) ediyoruz.
 app.listen(process.env.APP_PORT, () => { // port bilgisini .env'den alıyorum ve config() olmadan alamazdım çünkü env orada tanımlı.
-    console.log("Sunucu ayağa kalktı..");
+    console.log("Server started, PORT:" + process.env.APP_PORT);
     app.use("/projects", ProjectRoutes); // reotuerı direkt export ettiğimiz için ProjectRouters.router yapmamıza gerek kalmıyor.
     app.use("/users",  UserRoutes); 
 });   
