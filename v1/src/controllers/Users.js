@@ -1,9 +1,10 @@
-const {insert, list, loginUser, modify} = require ("../services/Users");
+const {insert, list, loginUser, modify, remove} = require ("../services/Users");
 const projectService = require("../services/Projects");
 const httpStatus = require("http-status");
 const { passwordToHash, generateAccessToken,  generateRefreshToken } = require ("../scripts/utils/helper");
 const uuid = require("uuid");
 const { http } = require("winston");
+const path = require("path"); //! klasör işlemler için bunu profile image'da kullandık
 
 const create = (req, res) => { //* create fonksiyonu, insert sayesinde yeni kullanıcı olusturmaktadır.
     req.body.password = passwordToHash(req.body.password); 
@@ -60,8 +61,6 @@ const index = (req, res) => { // get requestliyoruz ve bize kaydedilen userları
     };
   
 
-  
-
     // user'a ait projelerin listesini görmek için:
     //projectService : bize zaten projeleri listeliyor serviste/project'de. buradaki listeden aşağıda oldugu gibi list fonksiyonu ile user_id'ye find yapacağız. 
     // bunları yapmamız içinde  projectService getirdiğimiz yerdeki list'e where yazarak obje varsa alacağız. (list'in konumu /services/project'de cunku: userin projelerini alıyoruz. user listeleseydik, /services/user'dak, listi kullanırdık.     )
@@ -77,7 +76,6 @@ const projectList = (req, res) => {
     );
 
 };   
-
 
 
 
@@ -111,6 +109,67 @@ res.status(httpStatus.OK).send(updatedUser)
 };
 
 
+const changePassword = (req, res) => {
+    req.body.password = passwordToHash(req.body.password);
+modify({ _id: req.user?._id}, req.body)
+.then(updatedUser => { 
+    res.status(httpStatus.OK).send(updatedUser)
+})
+.catch(()=> res.status( httpStatus.INTERNAL_SERVER_ERROR).send({error: "Error, Cannot update information"}));
+};
+
+
+const deleteUser = (req, res) => {
+    if(!req.params?.id){ // id bilgisi router'dan geliyor.
+      return res.status(httpStatus.BAD_REQUEST).send({ 
+      message: "ID information missing"
+    });
+  }
+  
+    remove(req.params?.id) 
+      .then((deleteUser) => {  // req.body ve id= req.params.id yolluyoruz.
+  
+        if(!deleteUser){
+            return res.status(httpStatus.NOT_FOUND).send({
+              message: "User Records cannot find"
+          });
+        };
+  
+        res.status(httpStatus.OK).send({
+          message: "Info: User record deletion completed."
+        });
+      })
+      .catch(e => res.status(httpStatus.INTERNAL_SERVER_ERROR)
+      .send({error: "Error: Cannot process delete!"}));
+};
+
+
+  const updateProfileImage = (req, res ) => {
+    
+    //! resmi kontrolü
+    if(!req?.files?.profile_image){ // req içindeki fillerin içinde profile_image yoksa..
+        return res.status(httpStatus.BAD_REQUEST).send({ error: "Bu işlem için yeterli veri yok."})
+    };
+    // console.log(__dirname); //! çalıştırılan dosyanın yolunu veriyor. bunun altında hemen return false; yazdım ve bunun yoluna baktıgımda ilk başta clone v1\v1\src\controllers veriyordu. bizim src'ye gelmemiz lazım ki buradan upload'da gelip resimi yükleyebilelim.
+    //                         //? bu src'ye gelme işini path(yukarda tanımladık bu iş için) ve join ile sağlayacağız.
+    // console.log(path.join(__dirname, "../", "uploads/users")); //! mesela bu şekilde upload/users'a direkt geldik.
+    
+    //! resmi kaydetme
+    const extension = path.extname(req.files.profile_image.name);// kaydedilen resmin filename i çin yapıoz 
+    const fileName = `${req?.user._id}.${extension}`;// kaydedilen resmin filename i çin yapıoz 
+
+    const folderPath = path.join(__dirname, "../", "uploads/users", fileName); 
+    req.files.profile_image.mv(folderPath, function (err) {
+    if(err) return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ error: err});
+    modify({_id: req.user._id}, {profile_image : fileName })
+    .then(updatedUser => {
+        res.status(httpStatus.OK).send(updatedUser)
+    })
+    .catch(err => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ error: " upload başarılırı ama kayıt başarısız."}))
+    });  // mv, resimin bir değişkeni buna göre alıyoruz. console.log(req.file) yazınca cıkıyor
+  };
+
+
 
 
 
@@ -127,4 +186,7 @@ module.exports = {
     projectList,
     resetPassword,
     update,
+    deleteUser,
+    changePassword,
+    updateProfileImage,
 };
