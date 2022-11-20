@@ -1,6 +1,6 @@
 //logical işlemler(matıksal) controllers'da gerçekleşiyor
 
-const {insert, modify, list} = require ("../services/Projects");
+const {insert, modify, list, remove} = require ("../services/Projects");
 const httpStatus = require("http-status");
 
 
@@ -46,12 +46,44 @@ const update = (req, res) => {
 modify(req.body, req.params?.id)
     .then((updatedProject) => {  // req.body ve id= req.params.id yolluyoruz.
       res.status(httpStatus.OK).send(updatedProject)
-    }).catch(e => res.status(httpStatus.INTERNAL_SERVER_ERROR).send({error: "has a problem while recording"}))
+    })
+    .catch(e => res.status(httpStatus.INTERNAL_SERVER_ERROR)
+    .send({error: "has a problem while recording"}));
 };
+
+
+
+//? update'in içini aldık ve biraz değiştirdik:
+const deleteProject = (req, res) => {
+  if(!req.params?.id){ // id bilgisi router'dan geliyor.
+    return res.status(httpStatus.BAD_REQUEST).send({ 
+    message: "ID information missing"
+  });
+}
+
+  remove(req.params?.id) //services'da remove fonkunda siliyor.
+    .then((deletedProject) => {  // req.body ve id= req.params.id yolluyoruz.
+
+      if(!deletedProject){
+          return res.status(httpStatus.NOT_FOUND).send({
+            message: "User Records cannot find"
+        });
+      };
+
+      res.status(httpStatus.OK).send({
+        message: "Info: User record deletion completed."
+      });
+    })
+    .catch(e => res.status(httpStatus.INTERNAL_SERVER_ERROR)
+    .send({error: "Error: Cannot process delete!"}));
+
+}
+
   
 
 module.exports = {
     create,
     index,
     update,
+    deleteProject,
 };
