@@ -16,3 +16,4 @@
 {"level":"info","message":{"_id":"635fb213803aa83cdd0c261f","createdAt":"2022-10-31T11:31:31.448Z","name":"jaina21","updatedAt":"2022-10-31T11:31:31.448Z","user_id":"635f9fe24267ac6ff8965e6a"},"service":"project-service"}
 {"level":"info","message":{"_id":"636b7f293d14a9cb538b0c46","createdAt":"2022-11-09T10:21:29.672Z","name":"1Deneme","updatedAt":"2022-11-09T10:21:29.672Z","user_id":"636b5a2c935cf84b001e14ec"},"service":"project-service"}
 {"level":"info","message":{"_id":"636b964bdd54652d9886a86f","createdAt":"2022-11-09T12:00:11.245Z","name":"Testing Project 1","updatedAt":"2022-11-09T12:00:11.245Z","user_id":"636b5a2c935cf84b001e14ec"},"service":"project-service"}
+{"level":"info","message":{"_id":"636f7f1c67ddd9434a9fad5b","createdAt":"2022-11-12T11:10:20.240Z","name":"Testing Project 5","updatedAt":"2022-11-12T11:10:20.240Z","user_id":"636b5a2c935cf84b001e14ec"},"service":"project-service"}
