@@ -33,11 +33,18 @@ const modify = (data, id) => { //data: update olacak datadır.  id:id'den update
     // });
     
     // yukardakini tek satırda yapabiliriz: mongoose siteniden findByIdUpdate kullanımına göre yapabiliriz:
-    return Project.findByIdAndUpdate(id, data, {new : true});
+    return Project.findByIdAndUpdate(id, data, {new : true}); // id gönderiyoruz ve o bize update edilecek şeyi bulup update ediyor.
+};
+
+const remove = (id) => { //id'den update olacak datayı bulacağız
+    //!  yukarda yapıp burada {new : true} yapmamazıın sebebi, yeni obje olusturulmaz remove'da (=
+    //* findByIdAndDelete yazılışına doc'dan baktık.(içine sadece id koyulacağını ordan öğrendik. )
+    return Project.findByIdAndDelete(id); //? id gönderiyoruz ve o bize silinecek şeyi bulup siliyo
 };
 
 module.exports = {
     insert,
     list,
     modify,
+    remove,
 };
