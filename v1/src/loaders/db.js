@@ -1,8 +1,7 @@
 const Mongoose = require('mongoose');
 const db = Mongoose.connection; 
 
-
-db.once("open", ( ) => { //db bağlantısı gerçekleşirse:
+db.once("open", ( ) => { 
     console.log("DB Connection is currently successful.");    
 });
 
