@@ -1,16 +1,17 @@
-
 const validate= require('../middlewares/validate');
 const authenticate = require('../middlewares/authenticate');
+const idChecker = require('../middlewares/idChecker');
 const schemas = require("../validations/Projects");
 const express = require('express');
-const { create, index, update } =  require("../controllers/Projects"); 
-const router = express.Router(); // express'in router'ını kullanıyoruz.
+const ProjectController =  require("../controllers/Project"); 
+const router = express.Router();
 
 
 
 
-router.route("/").get(authenticate, index);   
-router.route("/").post(authenticate, validate(schemas.createValidation), create); 
-router.route("/:id").patch(authenticate, validate(schemas.updateValidation), update); //! /:id -> projects id'ye göre yapmak için
+router.route("/").get(authenticate, ProjectController.index);   
+router.route("/").post(authenticate, validate(schemas.createValidation), ProjectController.create); 
+router.route("/:id").patch(idChecker(), authenticate, validate(schemas.updateValidation), ProjectController.update); 
+router.route("/:id").delete(idChecker(), authenticate, ProjectController.deleteProject); 
 
-module.exports = router; // bunu direkt bu şekilde export edersek, app.js(genel)'de ProjectRouters.router yapmamıza gerek kalmıyor.(orda da  belirttim.)
+module.exports = router; 
