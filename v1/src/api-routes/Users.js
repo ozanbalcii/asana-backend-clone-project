@@ -1,34 +1,21 @@
-
-const validate= require('../middlewares/validate');     //validate middleware
-const schemas = require("../validations/Users");       // validations
+const validate= require('../middlewares/validate');    
+const schemas = require("../validations/Users");       
 const express = require('express');
-const { create, index, login, projectList, resetPassword, update } =  require("../controllers/Users"); 
+const UserController =  require("../controllers/User"); 
 const  authenticate = require("../middlewares/authenticate");
-
+const idChecker = require('../middlewares/idChecker');
 const router = express.Router(); 
 
 
-
- 
- router.get("/", index); 
- router.route("/").post(validate(schemas.createValidation), create);  
- router.route("/login").post(validate(schemas.loginValidation), login);  
- router.route("/reset-password").post(validate(schemas.resetPasswordValidation), resetPassword);  
- router.route("/update").patch(authenticate, validate(schemas.updateValidation), update);  //! authenticate yaptıgımız için /:id dememize gerek yok cunku user'ın kim oldugunu authenticate sayesinde biliyoruz
- router.route("/projects").get(authenticate, (projectList));  // authenticate'i yapmazsak request'in içindeki user'ı set set etmez ve çalışmaz
-
-
+ router.get("/", UserController.index); 
+ router.route("/").post(validate(schemas.createValidation), UserController.create);  
+ router.route("/login").post(validate(schemas.loginValidation), UserController.login);  
+ router.route("/:id").delete(idChecker(), authenticate, UserController.deleteUser);  
+ router.route("/reset-password").post(validate(schemas.resetPasswordValidation),UserController.resetPassword);  
+ router.route("/change-password").post(authenticate, validate(schemas.changePasswordValidation),UserController.changePassword);  
+ router.route("/update-profile-image").post(authenticate, UserController.updateProfileImage);  
+ router.route("/update").patch(authenticate, validate(schemas.updateValidation),UserController.update);
+ router.route("/projects").get(authenticate, UserController.projectList);  
 
 
 module.exports = router; 
-
-
-
- 
-
-
-
-
-
-
-
