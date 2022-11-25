@@ -7,9 +7,6 @@ const TaskController=  require("../controllers/Task");
 const router = express.Router(); 
 
 
-
-
-
 router.route("/").post(authenticate, validate(schemas.createValidation), TaskController.create); 
 router.route("/:id").patch(idChecker(), authenticate, validate(schemas.updateValidation), TaskController.update); 
 router.route("/:id").delete(idChecker(), authenticate, TaskController.deleteTask); 
