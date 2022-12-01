@@ -39,6 +39,7 @@ class User {
         })
         .catch((e) => res.status(httpStatus.INTERNAL_SERVER_ERROR).send(e));
     };
+    
     index(req, res){ 
             UserService.list()
             .then(( response ) => {
@@ -49,7 +50,8 @@ class User {
                 .catch((e) => res
                 .status(httpStatus.INTERNAL_SERVER_ERROR)
                 .send(e));   
-    };   
+    };  
+    
     projectList(req, res){  
         ProjectsServices
         .list({user_id : req.user?._id})
@@ -59,6 +61,7 @@ class User {
         .catch(e => res.status(httpStatus.INTERNAL_SERVER_ERROR))
         .send({error: "projeleri getirirken bir hata meydana gelmiştir."})
     };
+    
     resetPassword(req, res){
         const new_password = uuid.v4()?.split("-")[0] || `usr-${new Date().getTime()}`; 
       UserService.updateWhere({email: req.body.email}, {password: passwordToHash(new_password)})
@@ -84,9 +87,9 @@ class User {
             res.status(httpStatus.OK).send(updatedUser);
         })
         .catch(()=>res.status(httpStatus.INTERNAL_SERVER_ERROR).send({error: "güncelleme yapılırken bir problem olustu"}));
-    }    
+    }  
+    
     deleteUser(req, res){
-       
         if(!req.params?.id) {   
             return res.status(httpStatus.BAD_REQUEST).send({
                 message :"id bilgisi eksik"});
@@ -109,6 +112,7 @@ class User {
             return res.status(httpStatus.BAD_REQUEST).send({
                 error:"Lütfen profil fotoğrafı için resim seçiniz."});
        };
+        
        //! upload
         const extension = path.extname(req.files.profile_image.name);
         const fileName = `${req?.user._id}${extension}`;
@@ -124,12 +128,12 @@ class User {
     };   
 };
 
-const new_password = uuid.v4()?.split("-")[0] || `usr-${new Date().getTime()}`;    
-        UserService.updateWhere({email: req.body.email}, {password: passwordToHash(new_password)})
-       .then((updatedUser) => {
-            if(!updatedUser) return res.status(httpStatus.NOT_FOUND).send({error:"böyle bir kullanıcı bulunmamaktadır."})
-             res.status(httpStatus.OK).send(updatedUser);  
-       })
-       .catch (e=> res.status(httpStatus.INTERNAL_SERVER_ERROR).send({error:"resetlerken bir sorun cıktı"}))
+// const new_password = uuid.v4()?.split("-")[0] || `usr-${new Date().getTime()}`;    
+//         UserService.updateWhere({email: req.body.email}, {password: passwordToHash(new_password)})
+//        .then((updatedUser) => {
+//             if(!updatedUser) return res.status(httpStatus.NOT_FOUND).send({error:"böyle bir kullanıcı bulunmamaktadır."})
+//              res.status(httpStatus.OK).send(updatedUser);  
+//        })
+//        .catch (e=> res.status(httpStatus.INTERNAL_SERVER_ERROR).send({error:"resetlerken bir sorun cıktı"}))
 
 module.exports = new User();
