@@ -1,2 +1,2 @@
 # Asana-backEnd-clone-project
-NodeJs rest api.
+NodeJs, expressJs, postman, docker, mongoDb, npm packages.
